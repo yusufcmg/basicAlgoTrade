@@ -1,6 +1,6 @@
 .env
 
-# Python Cache ve Derlenmiş Dosyalar
+
 __pycache__/
 *.pyc
 *.pyo
@@ -8,14 +8,11 @@ __pycache__/
 *.egg-info/
 *.egg
 
-# Sanal Ortam Klasörleri (Kullandığınız isme göre düzenleyin)
-venv/
-.venv/
-*.basicAl/
-# env/
-# .env/ # DİKKAT: Bu, .env dosyası DEĞİL, .env adlı klasördür.
 
-# İşletim Sistemi ve IDE Dosyaları
+
+*.basicAl/
+
+
 .DS_Store
 Thumbs.db
 *.vscode/
