@@ -11,6 +11,7 @@ __pycache__/
 # Sanal Ortam Klasörleri (Kullandığınız isme göre düzenleyin)
 venv/
 .venv/
+*.basicAl/
 # env/
 # .env/ # DİKKAT: Bu, .env dosyası DEĞİL, .env adlı klasördür.
 
@@ -20,25 +21,17 @@ Thumbs.db
 *.vscode/
 *.idea/
 
-# =============================================
-# ----- KULLANICININ BELİRTTİĞİ İSTİSNALAR -----
-# =============================================
 
-# 1. backtest klasörü içindeki data klasörünün tamamı
-#    (Trailing slash '/' bunun bir klasör olduğunu belirtir)
 backtest/data/
 
-# 2. implement klasörü içindeki dotenv.py dosyası
+
 implement/dotenv.py
 
-# 3. implement klasörü içindeki funcs_n.py dosyası
+
 implement/funcs_n.py
 
-# =============================================
 
-# Jupyter Notebook Checkpointleri (Eğer kullanıyorsanız)
+
+
 .ipynb_checkpoints
 
-# Build/Distribution Artifacts (Opsiyonel)
-# build/
-# dist/

@@ -5,9 +5,10 @@ from backtesting import Backtest, Strategy
 from backtesting.lib import crossover      
 
 #verinin yüklenmesi
-data_path = 'C:\masaustu\basicAlgoTrade\backtest\data\BTC-1h-1000wks-data.csv'
+data_path = 'C:\\masaustu\\basicAlgoTrade\\backtest\\data\\guncelBTC_15m_20250513_164047_historical.csv'
 # CSV dosyasını oku, 'datetime' sütununu tarih/saat olarak ayrıştır ve bu sütunu indeks yap
-data = pd.read_csv(data_path, parse_dates=['datetime'], index_col='datetime')
+print(f"Kullanılan data_path: {data_path}")
+data = pd.read_csv(data_path, parse_dates=['timestamp'], index_col='timestamp', skipinitialspace=True)
 
 
 class BBSqueezeADX(Strategy):
@@ -20,6 +21,7 @@ class BBSqueezeADX(Strategy):
     adx_threshold = 25      # ADX için trend gücü eşiği
     take_profit = 0.05      # Kâr al hedefi (%5)
     stop_loss = 0.03        # Zarar durdurma hedefi (%3)
+    trade_size_percentage = 0.0001
     
     def init(self):
         # Bollinger Bantlarını Hesapla
@@ -71,25 +73,29 @@ class BBSqueezeADX(Strategy):
         
         # Alım Satım Mantığı - Eğer bir sıkışma bitişi yaşandıysa VE ADX trend gücünü teyit ediyorsa
         if self.squeeze_released and self.adx[-1] > self.adx_threshold:
+            
             # Kırılma yönünü belirle
             # Fiyat üst Bollinger Bandının üzerine çıktıysa VE açık pozisyon yoksa
+            
             if self.data.Close[-1] > self.upper_bb[-1] and not self.position:
                 # Yukarı yönlü kırılma için Alış (Long) pozisyonu
-                self.buy(sl=self.data.Close[-1] * (1 - self.stop_loss),  # Zarar Durdur: Giriş fiyatının %SL altı
+                self.buy(size=self.trade_size_percentage,
+                        sl=self.data.Close[-1] * (1 - self.stop_loss),  # Zarar Durdur: Giriş fiyatının %SL altı
                         tp=self.data.Close[-1] * (1 + self.take_profit)) # Kâr Al: Giriş fiyatının %TP üstü
                 self.squeeze_released = False  # Bayrağı sıfırla (bir sonraki sıkışma bitişini beklemek için)
                 
             # Fiyat alt Bollinger Bandının altına indiyse VE açık pozisyon yoksa
             elif self.data.Close[-1] < self.lower_bb[-1] and not self.position:
                 # Aşağı yönlü kırılma için Satış (Short) pozisyonu
-                self.sell(sl=self.data.Close[-1] * (1 + self.stop_loss), # Zarar Durdur: Giriş fiyatının %SL üstü
-                         tp=self.data.Close[-1] * (1 - self.take_profit))# Kâr Al: Giriş fiyatının %TP altı
+                self.sell(size=self.trade_size_percentage,
+                        sl=self.data.Close[-1] * (1 + self.stop_loss), # Zarar Durdur: Giriş fiyatının %SL üstü
+                        tp=self.data.Close[-1] * (1 - self.take_profit))# Kâr Al: Giriş fiyatının %TP altı
                 self.squeeze_released = False  # Bayrağı sıfırla
 
 data.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
 
 # Geriye dönük test nesnesini oluştur ve yapılandır
-bt = Backtest(data, BBSqueezeADX, cash=100000, commission=0.002) # Komisyon oranı %0.2
+bt = Backtest(data, BBSqueezeADX, cash=500000, commission=0.002) # Komisyon oranı %0.2
 
 
 print("🌟  GERİYE DÖNÜK TEST BAŞLIYOR - Varsayılan Parametreler 🌟")
@@ -128,3 +134,5 @@ print(f"ADX Periyot: {optimization_results._strategy.adx_period}")
 print(f"ADX Eşik Değeri: {optimization_results._strategy.adx_threshold}")
 print(f"Kâr Al: {optimization_results._strategy.take_profit * 100:.1f}%")
 print(f"Zarar Durdur: {optimization_results._strategy.stop_loss * 100:.1f}%")
+
+breakpoint = 1
