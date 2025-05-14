@@ -19,15 +19,16 @@ import talib
 from termcolor import colored
 import colorama
 from colorama import Fore, Back, Style
-import implement.funcs_n as n
 from datetime import datetime, timedelta
 import pytz
 from eth_account.signers.local import LocalAccount
 import eth_account
 from dotenv import load_dotenv
+import funcs_n as n
 
-parent_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, parent_dir)
+
+# parent_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.insert(0, parent_dir)
 
 # Terminal renkleri için colorama'yı başlat
 colorama.init(autoreset=True)
@@ -339,7 +340,7 @@ def bot():
         print(f"{Fore.RED}📋 Hata izi (Stack trace):\n{traceback.format_exc()}")
 
 def main():
-    """Bot için ana giriş noktası"""
+    
     # Başlığı göster
     print_banner()
 
